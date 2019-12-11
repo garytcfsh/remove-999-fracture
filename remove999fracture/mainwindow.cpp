@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
     createTargetNodeList();
     createPosTable();
     createElemTable();
+    compareTargetNode();
 }
 
 MainWindow::~MainWindow()
@@ -137,5 +138,10 @@ void MainWindow::createElemTable()
 
 void MainWindow::compareTargetNode()
 {
-
+    QStringList frac_set;
+    int *p;
+    frac_set = et.searchFracSet( targetNode[0]);
+    p = pt.searchPos( frac_set[0], frac_set[1]);
+    et.removeElem( p[0], p[1]);
+    qDebug()<<"compare complete";
 }

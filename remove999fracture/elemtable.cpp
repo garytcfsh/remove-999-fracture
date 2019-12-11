@@ -3,6 +3,8 @@
 ElemTable::ElemTable()
 {
     ii=0;
+    frac_set.append(" ");
+    frac_set.append(" ");
 }
 
 void ElemTable::createTable( int n)
@@ -20,8 +22,10 @@ void ElemTable::append(QString oneLine)
     {
         table[i]->append( QSL_oneLine[i]);
     }
-    qDebug()<<table[0][0][ii];
     ii++;
+    if (ii==5)
+        table[0]->removeAt(3);
+    qDebug()<<"df";
 }
 
 void ElemTable::removeElem(int start, int num)
@@ -35,14 +39,21 @@ void ElemTable::removeElem(int start, int num)
     }
 }
 
-int *ElemTable::searchFracSet(QString node)
+QStringList ElemTable::searchFracSet(QString node)
 {
     for (int i=1; i<4; i++)
     {
         for (int j=0; j<table[i]->count()-1; j++)
         {
-            if ( node == table[i][j][0])
-                ;
+            if ( node == table[i][0][j])
+            {
+                nowX = i;
+                nowY = j;
+                frac_set[0] = table[4][0][j];
+                frac_set[1] = table[5][0][j];
+
+                return frac_set;
+            }
         }
     }
 }
