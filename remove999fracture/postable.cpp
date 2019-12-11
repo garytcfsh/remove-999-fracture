@@ -24,11 +24,17 @@ int *posTable::searchPos(QString fn, QString sn)
         {
             p[0] = pos[i];
             if (i == fracNum.count()-1)
-                p[1] = 0;
+                p[1] = 1;
             else
                 p[1] = pos[i+1] - pos[i];
         }
     }
+    updatePos();
 
     return p;
+}
+
+void posTable::updatePos()
+{
+
 }
