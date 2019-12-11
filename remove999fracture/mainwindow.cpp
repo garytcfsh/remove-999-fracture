@@ -126,11 +126,16 @@ void MainWindow::createElemTable()
     et.createTable( fracElemLine.simplified().split(" ").count()-1);
     QString oneLine;
     streamIn.seek( fracElemPos);
-    while (!oneLine.contains("ELEM"))
+    while (!oneLine.contains(" 0 "))
     {
         oneLine = streamIn.readLine();
         et.append( oneLine);
     }
     qDebug()<<"fracElem table is created";
+
+}
+
+void MainWindow::compareTargetNode()
+{
 
 }

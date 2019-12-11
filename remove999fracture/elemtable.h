@@ -12,9 +12,14 @@ public:
 
     void createTable( int);
     void append( QString);
+    void removeElem( int, int);
+    QStringList searchFracSet( QString);
 
 private:
     QList< QStringList*> table;
+    int ii;
+    QStringList frac_set;
+    int nowX, nowY;
 };
 
 #endif // ELEMTABLE_H

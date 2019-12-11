@@ -10,7 +10,7 @@ public:
     posTable();
 
     void append( QString, QString, int);
-    int *search( QString, QString);
+    int *searchPos( QString, QString);
 
 private:
     QStringList fracNum, setNum;

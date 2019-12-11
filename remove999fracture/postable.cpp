@@ -12,11 +12,11 @@ void posTable::append(QString fn, QString sn, int p)
     pos.append(p);
 }
 
-int *posTable::search(QString fn, QString sn)
+int *posTable::searchPos(QString fn, QString sn)
 {
     p = new int(2);
     // p[0] -> begin position of the fracture set
-    // p[1] -> number of the fracture set
+    // p[1] -> number of elem in the fracture set
     // if p[1] is zero, means that it is the lastest fracture set
     for (int i=0; i<fracNum.count(); i++)
     {

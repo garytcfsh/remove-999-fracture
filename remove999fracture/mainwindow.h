@@ -28,6 +28,7 @@ public:
     void createTargetNodeList();
     void createPosTable();
     void createElemTable();
+    void compareTargetNode();
 
 private:
     Ui::MainWindow *ui;
