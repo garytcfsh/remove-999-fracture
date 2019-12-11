@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QTextStream>
+#include <QMessageBox>
 
 
 
@@ -29,6 +30,9 @@ public:
     void createPosTable();
     void createElemTable();
     void compareTargetNode();
+    void wrightFile();
+    void createNewFile( QFile*, QString);
+    void renameFile( QFile*, QFile*);
 
 private:
     Ui::MainWindow *ui;
@@ -38,5 +42,6 @@ private:
     QString nodeLine, fracElemLine, gridElemLine;
     posTable pt;
     ElemTable et;
+    QMessageBox msg;
 };
 #endif // MAINWINDOW_H

@@ -1,9 +1,11 @@
 #ifndef ELEMTABLE_H
 #define ELEMTABLE_H
 
+#include "postable.h"
 #include <QString>
 #include <QList>
 #include <QDebug>
+#include <QMessageBox>
 
 class ElemTable
 {
@@ -13,13 +15,14 @@ public:
     void createTable( int);
     void append( QString);
     void removeElem( int, int);
-    QStringList searchFracSet( QString);
+    void searchFracSet( QString, posTable*);
+    void reNumberingElem();
+    QList< QStringList*> getTable();
 
 private:
     QList< QStringList*> table;
     int ii;
-    QStringList frac_set;
-    int nowX, nowY;
+    QString frac, set;
 };
 
 #endif // ELEMTABLE_H

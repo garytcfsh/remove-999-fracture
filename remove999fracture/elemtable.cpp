@@ -3,8 +3,6 @@
 ElemTable::ElemTable()
 {
     ii=0;
-    frac_set.append(" ");
-    frac_set.append(" ");
 }
 
 void ElemTable::createTable( int n)
@@ -22,10 +20,6 @@ void ElemTable::append(QString oneLine)
     {
         table[i]->append( QSL_oneLine[i]);
     }
-    ii++;
-    if (ii==5)
-        table[0]->removeAt(3);
-    qDebug()<<"df";
 }
 
 void ElemTable::removeElem(int start, int num)
@@ -39,21 +33,46 @@ void ElemTable::removeElem(int start, int num)
     }
 }
 
-QStringList ElemTable::searchFracSet(QString node)
+void ElemTable::searchFracSet(QString node, posTable *pt)
 {
+    int *p;
+
     for (int i=1; i<4; i++)
     {
         for (int j=0; j<table[i]->count()-1; j++)
         {
             if ( node == table[i][0][j])
             {
-                nowX = i;
-                nowY = j;
-                frac_set[0] = table[4][0][j];
-                frac_set[1] = table[5][0][j];
+                frac = table[4][0][j];
+                set = table[5][0][j];
 
-                return frac_set;
+                p = pt->searchPos( frac, set);
+                if (p[0] == -1)
+                {
+                    QMessageBox msg;
+                    msg.setText("searchPos error");
+                    msg.exec();
+                }
+                else
+                {
+                    removeElem( p[0], p[1]);
+                    j = p[0];
+                }
             }
         }
     }
+    qDebug()<<"searchFracSet complete";
+}
+
+void ElemTable::reNumberingElem()
+{
+    for (int i=0; i<table[0]->count()-1; i++)
+    {
+        table[0][0][i].setNum( i+1);
+    }
+}
+
+QList< QStringList*> ElemTable::getTable()
+{
+    return table;
 }

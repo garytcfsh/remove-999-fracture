@@ -7,37 +7,52 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    QFile fileIn;
+    QFile fileIn, fileOut;
     QString fileType = "mff";
 
-    openFile( &fileIn, fileType);
-    streamIn.setDevice( &fileIn);
-
-    QString oneLine;
-    headPos = streamIn.pos();
-    while (!streamIn.atEnd())
+    if (openFile( &fileIn, fileType) == 0)
     {
-        oneLine = streamIn.readLine();
-        if (oneLine.contains(" NODE "))
+        streamIn.setDevice( &fileIn);
+
+        QString oneLine;
+        headPos = streamIn.pos();
+        while (!streamIn.atEnd())
         {
-            nodePos = streamIn.pos();
-            nodeLine = oneLine;
+            oneLine = streamIn.readLine();
+            if (oneLine.contains(" NODE "))
+            {
+                nodePos = streamIn.pos();
+                nodeLine = oneLine;
+            }
+            if (oneLine.contains("FracElem"))
+            {
+                fracElemPos = streamIn.pos();
+                fracElemLine = oneLine;
+            }
+            if (oneLine.contains("ELEM"))
+            {
+                gridElemPos = streamIn.pos();
+                gridElemLine = oneLine;
+            }
         }
-        if (oneLine.contains("FracElem"))
-        {
-            fracElemPos = streamIn.pos();
-            fracElemLine = oneLine;
-        }
-        if (oneLine.contains("ELEM"))
-        {
-            gridElemPos = streamIn.pos();
-            gridElemLine = oneLine;
-        }
+        createTargetNodeList();
+        createPosTable();
+        createElemTable();
+        compareTargetNode();
+
+        QString fileName = fileIn.fileName();
+        fileName.remove( fileName.length()-3, 3);
+        fileName = fileName + "new";
+        createNewFile( &fileOut, fileName);
+        streamOut.setDevice( &fileOut);
+        wrightFile();
+        renameFile( &fileIn, &fileOut);
+        fileIn.close();
+        fileOut.close();
+
+        msg.setText("The new restart file is created");
+        msg.exec();
     }
-    createTargetNodeList();
-    createPosTable();
-    createElemTable();
-    compareTargetNode();
 }
 
 MainWindow::~MainWindow()
@@ -107,16 +122,19 @@ void MainWindow::createPosTable()
         if (QSL_oneLine[i] == "Set#")
             Set = i;
     }
+    //the last line of data is 0  0  0  0
+    //set the last line of posTable as 0 0 i
+    int i=0;
     while (elemNum != "0")
     {
         QSL_oneLine = streamIn.readLine().simplified().split(" ");
         elemNum = QSL_oneLine[0];
         if (oldFracNum != QSL_oneLine[Frac] || oldSetNum != QSL_oneLine[Set])
-            if (elemNum != "0")
-                pt.append( QSL_oneLine[Frac], QSL_oneLine[Set], QSL_oneLine[0].toInt());
+            pt.append( QSL_oneLine[Frac], QSL_oneLine[Set], i);
 
         oldFracNum = QSL_oneLine[Frac];
         oldSetNum = QSL_oneLine[Set];
+        i++;
     }
     qDebug()<<"position table is created";
 }
@@ -140,8 +158,50 @@ void MainWindow::compareTargetNode()
 {
     QStringList frac_set;
     int *p;
-    frac_set = et.searchFracSet( targetNode[0]);
-    p = pt.searchPos( frac_set[0], frac_set[1]);
-    et.removeElem( p[0], p[1]);
+    et.searchFracSet( targetNode[0], &pt);
+    et.reNumberingElem();
     qDebug()<<"compare complete";
+}
+
+void MainWindow::createNewFile(QFile *newFile, QString fileName)
+{
+    newFile->setFileName( fileName);
+    newFile->open( QFile::WriteOnly|QFile::Text);
+}
+
+void MainWindow::wrightFile()
+{
+    streamIn.seek(headPos);
+    QString oneLine;
+
+    while (!oneLine.contains("FracElem"))
+    {
+        oneLine = streamIn.readLine();
+        streamOut << oneLine << endl;
+    }
+    for (int i=0; i<et.getTable()[0]->count(); i++)
+    {
+        oneLine = "";
+        for (int j=0; j<et.getTable().count(); j++)
+        {
+            oneLine = oneLine + '\t' + et.getTable()[j][0][i];
+        }
+        streamOut << oneLine << endl;
+    }
+    streamOut << gridElemLine << endl;
+    streamIn.seek(gridElemPos);
+    while (!streamIn.atEnd())
+    {
+        oneLine = streamIn.readLine();
+        streamOut << oneLine << endl;
+    }
+
+}
+
+void MainWindow::renameFile(QFile *oldFile, QFile *newFile)
+{
+    QString fileName = oldFile->fileName();
+    fileName.remove( fileName.length()-3, 3);
+    oldFile->rename( fileName + "old");
+    newFile->rename( fileName + "mff");
 }

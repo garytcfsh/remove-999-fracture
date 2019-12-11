@@ -11,6 +11,7 @@ public:
 
     void append( QString, QString, int);
     int *searchPos( QString, QString);
+    void updatePos( int, int);
 
 private:
     QStringList fracNum, setNum;
