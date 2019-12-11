@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
     createTargetNodeList();
+    createPosTable();
 }
 
 MainWindow::~MainWindow()
@@ -68,8 +69,8 @@ void MainWindow::createFile(QFile *file, QString fileName)
 
 void MainWindow::createTargetNodeList()
 {
-    qDebug()<<"c";
     QStringList QSL_oneLine;
+    QString oneLine;
     int TYPE, HEAD;
     streamIn.seek( nodePos);
     QSL_oneLine = nodeLine.simplified().split(" ");
@@ -80,14 +81,40 @@ void MainWindow::createTargetNodeList()
         if (QSL_oneLine[i] == "HEAD")
             HEAD = i;
     }
-    qDebug()<<QSL_oneLine;
-    qDebug()<<TYPE<<HEAD;
-    while(streamIn.pos() != fracElemPos)
+    while(!oneLine.contains("FracElem"))
     {
-        QSL_oneLine = streamIn.readLine().simplified().split(" ");
+        oneLine = streamIn.readLine();
+        QSL_oneLine = oneLine.simplified().split(" ");
         if (QSL_oneLine[TYPE] == "4" && QSL_oneLine[HEAD].contains("999"))
             targetNode.append( QSL_oneLine[0]);
     }
+    qDebug()<<"target list is created";
+}
 
+void MainWindow::createPosTable()
+{
+    QStringList QSL_oneLine;
+    QString elemNum, oldFracNum, oldSetNum;
+    int Frac, Set;
+    streamIn.seek( fracElemPos);
+    QSL_oneLine = fracElemLine.simplified().split(" ");
+    for (int i=0; i<QSL_oneLine.count(); i++)
+    {
+        if (QSL_oneLine[i] == "Frac#")
+            Frac = i;
+        if (QSL_oneLine[i] == "Set#")
+            Set = i;
+    }
+    while (elemNum != "0")
+    {
+        QSL_oneLine = streamIn.readLine().simplified().split(" ");
+        elemNum = QSL_oneLine[0];
+        if (oldFracNum != QSL_oneLine[Frac] || oldSetNum != QSL_oneLine[Set])
+            if (elemNum != "0")
+                pt.append( QSL_oneLine[Frac], QSL_oneLine[Set], QSL_oneLine[0].toInt());
 
+        oldFracNum = QSL_oneLine[Frac];
+        oldSetNum = QSL_oneLine[Set];
+    }
+    qDebug()<<"position table is created";
 }

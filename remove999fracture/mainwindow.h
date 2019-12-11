@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "postable.h"
 #include <QDebug>
 #include <QFile>
 #include <QFileDialog>
@@ -24,6 +25,7 @@ public:
     int openFile( QFile*, QString);
     void createFile( QFile*, QString);
     void createTargetNodeList();
+    void createPosTable();
 
 private:
     Ui::MainWindow *ui;
@@ -31,5 +33,6 @@ private:
     QTextStream streamIn, streamOut;
     qint64 headPos, nodePos, fracElemPos, gridElemPos;
     QString nodeLine, fracElemLine, gridElemLine;
+    posTable pt;
 };
 #endif // MAINWINDOW_H
