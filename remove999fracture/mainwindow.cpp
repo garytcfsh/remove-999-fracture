@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
     createTargetNodeList();
     createPosTable();
+    createElemTable();
 }
 
 MainWindow::~MainWindow()
@@ -117,4 +118,19 @@ void MainWindow::createPosTable()
         oldSetNum = QSL_oneLine[Set];
     }
     qDebug()<<"position table is created";
+}
+
+void MainWindow::createElemTable()
+{
+    //there is a strange property which is named "Minerals" in restart.mff
+    et.createTable( fracElemLine.simplified().split(" ").count()-1);
+    QString oneLine;
+    streamIn.seek( fracElemPos);
+    while (!oneLine.contains("ELEM"))
+    {
+        oneLine = streamIn.readLine();
+        et.append( oneLine);
+    }
+    qDebug()<<"fracElem table is created";
+
 }

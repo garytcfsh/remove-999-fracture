@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "postable.h"
+#include "elemtable.h"
 #include <QDebug>
 #include <QFile>
 #include <QFileDialog>
@@ -26,6 +27,7 @@ public:
     void createFile( QFile*, QString);
     void createTargetNodeList();
     void createPosTable();
+    void createElemTable();
 
 private:
     Ui::MainWindow *ui;
@@ -34,5 +36,6 @@ private:
     qint64 headPos, nodePos, fracElemPos, gridElemPos;
     QString nodeLine, fracElemLine, gridElemLine;
     posTable pt;
+    ElemTable et;
 };
 #endif // MAINWINDOW_H
