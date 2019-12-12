@@ -43,5 +43,6 @@ private:
     posTable pt;
     ElemTable et;
     QMessageBox msg;
+    int maxNodeNum;
 };
 #endif // MAINWINDOW_H

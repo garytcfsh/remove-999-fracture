@@ -15,7 +15,9 @@ public:
     ElemTable();
 
     void createTable( int);
+    void countingSortNfsTable( int);
     void append( QString);
+    void appendNfs( QString, QString, QString);
     void removeElem( int, int);
     void searchFracSet( QString, posTable*);
     void reNumberingElem();
@@ -23,7 +25,7 @@ public:
     QList< QStringList*> getRemovedTable();
 
 private:
-    QList< QStringList*> table, removedTable;
+    QList< QStringList*> table, removedTable, nfsTable;
     int ii;
     QString frac, set;
 };

@@ -90,7 +90,7 @@ void MainWindow::createFile(QFile *file, QString fileName)
 void MainWindow::createTargetNodeList()
 {
     QStringList QSL_oneLine;
-    QString oneLine;
+    QString oneLine, lastNode, lastNode1, lastNode2;
     int TYPE, HEAD;
     streamIn.seek( nodePos);
     QSL_oneLine = nodeLine.simplified().split(" ");
@@ -107,7 +107,11 @@ void MainWindow::createTargetNodeList()
         QSL_oneLine = oneLine.simplified().split(" ");
         if (QSL_oneLine[TYPE] == "4" && QSL_oneLine[HEAD].contains("999"))
             targetNode.append( QSL_oneLine[0]);
+        lastNode2 = lastNode1;
+        lastNode1 = lastNode;
+        lastNode = QSL_oneLine[0];
     }
+    maxNodeNum = lastNode.toInt();
     qDebug()<<"target list is created";
 }
 
@@ -153,6 +157,7 @@ void MainWindow::createElemTable()
         oneLine = streamIn.readLine();
         et.append( oneLine);
     }
+    et.countingSortNfsTable( maxNodeNum);
     qDebug()<<"fracElem table is created";
 
 }
