@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    QFile fileIn, fileOut;
+    QFile fileIn, fileOut, fileOut2;
     QString fileType = "mff";
 
     if (openFile( &fileIn, fileType) == 0)
@@ -42,13 +42,16 @@ MainWindow::MainWindow(QWidget *parent)
 
         QString fileName = fileIn.fileName();
         fileName.remove( fileName.length()-3, 3);
+        createNewFile( &fileOut2, fileName+"rm");
         fileName = fileName + "new";
         createNewFile( &fileOut, fileName);
         streamOut.setDevice( &fileOut);
+        streamOut2.setDevice( &fileOut2);
         wrightFile();
         renameFile( &fileIn, &fileOut);
         fileIn.close();
         fileOut.close();
+        fileOut2.close();
 
         msg.setText("The new restart file is created");
         msg.exec();
@@ -161,7 +164,9 @@ void MainWindow::compareTargetNode()
         et.searchFracSet( targetNode[i], &pt);
         double a(i);
         double b(targetNode.count());
-        qDebug()<<a/b*100;
+        qDebug()<<i<<targetNode[i];
+        qDebug()<<"searchFracSet complete";
+        //qDebug()<<a/b*100<<"%";
     }
     et.reNumberingElem();
     qDebug()<<"compare complete";
@@ -182,6 +187,7 @@ void MainWindow::wrightFile()
     {
         oneLine = streamIn.readLine();
         streamOut << oneLine << endl;
+        streamOut2 << oneLine << endl;
     }
     for (int i=0; i<et.getTable()[0]->count(); i++)
     {
@@ -192,12 +198,23 @@ void MainWindow::wrightFile()
         }
         streamOut << oneLine << endl;
     }
+    for (int i=0; i<et.getRemovedTable()[0]->count(); i++)
+    {
+        oneLine = "";
+        for (int j=0; j<et.getRemovedTable().count(); j++)
+        {
+            oneLine = oneLine + '\t' + et.getRemovedTable()[j][0][i];
+        }
+        streamOut2 << oneLine << endl;
+    }
     streamOut << gridElemLine << endl;
+    streamOut2 << gridElemLine << endl;
     streamIn.seek(gridElemPos);
     while (!streamIn.atEnd())
     {
         oneLine = streamIn.readLine();
         streamOut << oneLine << endl;
+        streamOut2 << oneLine << endl;
     }
 
 }

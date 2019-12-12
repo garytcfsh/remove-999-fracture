@@ -20,9 +20,10 @@ public:
     void searchFracSet( QString, posTable*);
     void reNumberingElem();
     QList< QStringList*> getTable();
+    QList< QStringList*> getRemovedTable();
 
 private:
-    QList< QStringList*> table;
+    QList< QStringList*> table, removedTable;
     int ii;
     QString frac, set;
 };

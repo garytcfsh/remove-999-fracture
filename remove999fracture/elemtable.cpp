@@ -10,6 +10,7 @@ void ElemTable::createTable( int n)
     for (int i=0; i<n; i++)
     {
         table.append( new QStringList);
+        removedTable.append( new QStringList);
     }
 }
 
@@ -28,6 +29,7 @@ void ElemTable::removeElem(int start, int num)
     {
         for (int j=0; j<num; j++)
         {
+            removedTable[i]->append( table[i][0][start]);
             table[i]->removeAt( start);
         }
     }
@@ -60,12 +62,12 @@ void ElemTable::searchFracSet(QString node, posTable *pt)
                     removeElem( p[0], p[1]);
                     j = p[0];
                 }
+                qDebug()<<"frac"<<frac<<"set"<<set;
+                qDebug()<<"i"<<i<<"j"<<j;
             }
         }
     }
-    qDebug()<<a.elapsed();
-    qDebug()<<table[0]->count();
-    qDebug()<<"searchFracSet complete";
+    qDebug()<<a.elapsed()<<" ms";
 }
 
 void ElemTable::reNumberingElem()
@@ -74,9 +76,22 @@ void ElemTable::reNumberingElem()
     {
         table[0][0][i].setNum( i+1);
     }
+    for (int i=0; i<removedTable[0]->count()-1; i++)
+    {
+        removedTable[0][0][i].setNum( i+1);
+    }
+    for (int i=0; i<table.count(); i++)
+    {
+        removedTable[i]->append( table[i]->last());
+    }
 }
 
 QList< QStringList*> ElemTable::getTable()
 {
     return table;
+}
+
+QList< QStringList*> ElemTable::getRemovedTable()
+{
+    return removedTable;
 }

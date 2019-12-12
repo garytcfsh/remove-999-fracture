@@ -37,7 +37,7 @@ public:
 private:
     Ui::MainWindow *ui;
     QStringList targetNode;
-    QTextStream streamIn, streamOut;
+    QTextStream streamIn, streamOut, streamOut2;
     qint64 headPos, nodePos, fracElemPos, gridElemPos;
     QString nodeLine, fracElemLine, gridElemLine;
     posTable pt;
