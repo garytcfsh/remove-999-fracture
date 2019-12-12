@@ -156,9 +156,13 @@ void MainWindow::createElemTable()
 
 void MainWindow::compareTargetNode()
 {
-    QStringList frac_set;
-    int *p;
-    et.searchFracSet( targetNode[0], &pt);
+    for (int i=0; i<targetNode.count(); i++)
+    {
+        et.searchFracSet( targetNode[i], &pt);
+        double a(i);
+        double b(targetNode.count());
+        qDebug()<<a/b*100;
+    }
     et.reNumberingElem();
     qDebug()<<"compare complete";
 }

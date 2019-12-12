@@ -43,6 +43,6 @@ void posTable::updatePos(int i, int num)
     pos.removeAt(i);
     for (int j=i; j<fracNum.count(); j++)
     {
-        pos[i] = pos[i] - num;
+        pos[j] = pos[j] - num;
     }
 }

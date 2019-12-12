@@ -6,6 +6,8 @@
 #include <QList>
 #include <QDebug>
 #include <QMessageBox>
+#include <QDateTime>
+#include <QDate>
 
 class ElemTable
 {

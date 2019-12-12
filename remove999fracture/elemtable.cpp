@@ -35,6 +35,8 @@ void ElemTable::removeElem(int start, int num)
 
 void ElemTable::searchFracSet(QString node, posTable *pt)
 {
+    QTime a;
+    a.start();
     int *p;
 
     for (int i=1; i<4; i++)
@@ -61,6 +63,8 @@ void ElemTable::searchFracSet(QString node, posTable *pt)
             }
         }
     }
+    qDebug()<<a.elapsed();
+    qDebug()<<table[0]->count();
     qDebug()<<"searchFracSet complete";
 }
 
