@@ -7,30 +7,31 @@ ElemTable::ElemTable()
 
 void ElemTable::countingSortNfsTable( int max)
 {
+    nfsTable.removeLast();
+    nfsTable.removeLast();
+    nfsTable.removeLast();
     int min = 1;
     int size = max - min + 1;
     int *count = new int[size];
     for (int i=0; i<size; i++)
     {
-        count[i] = count[i] + count[i-1];
+        ++count[i-min];
+    }
+    for (int i=1; i<size; ++i)
+    {
+        count[i] += count[i-1];
     }
     QList< QStringList*> origin = nfsTable;
-    for (int i=nfsTable.count()-1; i>=0; i--)
+    for (int i=nfsTable.count()-1; i>=0; --i)
     {
-        int n = origin[0][0][i].toInt();
-        nfsTable[0][0][ --count[ n-min]] = origin[0][0][i];
-        nfsTable[1][0][ --count[ n-min]] = origin[1][0][i];
-        nfsTable[2][0][ --count[ n-min]] = origin[2][0][i];
+        int n = origin[i][0][0].toInt();
+        int a = n-min;
+        int b = count[n-min];
+        nfsTable[ --count[ n-min]][0][0] = origin[i][0][0];
+        nfsTable[ --count[ n-min]][0][1] = origin[i][0][1];
+        nfsTable[ --count[ n-min]][0][2] = origin[i][0][2];
     }
     qDebug()<<"df";
-}
-
-void ElemTable::appendNfs(QString n, QString f, QString s)
-{
-    nfsTable.append( new QStringList);
-    nfsTable.last()->append(n);
-    nfsTable.last()->append(f);
-    nfsTable.last()->append(s);
 }
 
 void ElemTable::createTable( int n)
@@ -52,7 +53,14 @@ void ElemTable::append(QString oneLine)
     appendNfs( QSL_oneLine[1], QSL_oneLine[4], QSL_oneLine[5]);
     appendNfs( QSL_oneLine[2], QSL_oneLine[4], QSL_oneLine[5]);
     appendNfs( QSL_oneLine[3], QSL_oneLine[4], QSL_oneLine[5]);
-    qDebug()<<table[0]->last();
+}
+
+void ElemTable::appendNfs(QString n, QString f, QString s)
+{
+    nfsTable.append( new QStringList);
+    nfsTable.last()->append(n);
+    nfsTable.last()->append(f);
+    nfsTable.last()->append(s);
 }
 
 void ElemTable::removeElem(int start, int num)

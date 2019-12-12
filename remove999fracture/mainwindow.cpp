@@ -111,7 +111,7 @@ void MainWindow::createTargetNodeList()
         lastNode1 = lastNode;
         lastNode = QSL_oneLine[0];
     }
-    maxNodeNum = lastNode.toInt();
+    maxNodeNum = lastNode2.toInt();
     qDebug()<<"target list is created";
 }
 
