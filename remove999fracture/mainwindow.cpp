@@ -157,7 +157,7 @@ void MainWindow::createElemTable()
         oneLine = streamIn.readLine();
         et.append( oneLine);
     }
-    et.countingSortNfsTable( maxNodeNum);
+    et.countingSortNfsTable();
     qDebug()<<"fracElem table is created";
 
 }

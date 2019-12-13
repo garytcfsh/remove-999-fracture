@@ -15,7 +15,7 @@ public:
     ElemTable();
 
     void createTable( int);
-    void countingSortNfsTable( int);
+    void countingSortNfsTable();
     void append( QString);
     void appendNfs( QString, QString, QString);
     void removeElem( int, int);

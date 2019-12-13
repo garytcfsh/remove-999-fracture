@@ -5,31 +5,53 @@ ElemTable::ElemTable()
     ii=0;
 }
 
-void ElemTable::countingSortNfsTable( int max)
+void ElemTable::countingSortNfsTable()
 {
     nfsTable.removeLast();
     nfsTable.removeLast();
     nfsTable.removeLast();
-    int min = 1;
+    int min = nfsTable[0][0][0].toInt(), max = 0;
+    for (int i=nfsTable.count()-1; i>=0; --i)
+    {
+        int n = nfsTable[i][0][0].toInt();
+        if ( max < n)
+        {
+            max = n;
+        }
+        if ( min > n)
+        {
+            min = n;
+        }
+    }
     int size = max - min + 1;
     int *count = new int[size];
     for (int i=0; i<size; i++)
+        count[i] = 0;
+    for (int i=0; i<nfsTable.count(); i++)
     {
-        ++count[i-min];
+        ++count[ nfsTable[i][0][0].toInt() - min];
     }
     for (int i=1; i<size; ++i)
     {
         count[i] += count[i-1];
     }
-    QList< QStringList*> origin = nfsTable;
+    QList< QStringList*> origin;
+    for (int i=0; i<nfsTable.count(); i++)
+    {
+        origin.append( new QStringList);
+        for (int j=0; j<3; j++)
+        {
+            origin[i]->append(nfsTable[i][0][j]);
+        }
+    }
+    qDebug()<<"fd";
     for (int i=nfsTable.count()-1; i>=0; --i)
     {
         int n = origin[i][0][0].toInt();
-        int a = n-min;
-        int b = count[n-min];
-        nfsTable[ --count[ n-min]][0][0] = origin[i][0][0];
-        nfsTable[ --count[ n-min]][0][1] = origin[i][0][1];
-        nfsTable[ --count[ n-min]][0][2] = origin[i][0][2];
+        int nn = --count[ n-min];
+        nfsTable[nn][0][0] = origin[i][0][0];
+        nfsTable[nn][0][1] = origin[i][0][1];
+        nfsTable[nn][0][2] = origin[i][0][2];
     }
     qDebug()<<"df";
 }
