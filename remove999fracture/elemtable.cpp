@@ -44,7 +44,6 @@ void ElemTable::countingSortNfsTable()
             origin[i]->append(nfsTable[i][0][j]);
         }
     }
-    qDebug()<<"fd";
     for (int i=nfsTable.count()-1; i>=0; --i)
     {
         int n = origin[i][0][0].toInt();
@@ -53,7 +52,36 @@ void ElemTable::countingSortNfsTable()
         nfsTable[nn][0][1] = origin[i][0][1];
         nfsTable[nn][0][2] = origin[i][0][2];
     }
-    qDebug()<<"df";
+    origin.clear();
+}
+
+void ElemTable::removeRepeatNfsTable()
+{
+    QList<int> re;
+    for (int i=nfsTable.count()-1; i>0; i--)
+    {
+        if (nfsTable[i-1][0][0] == nfsTable[i][0][0])
+            re.append(i);
+    }
+    for (int i=0; i<re.count(); i++)
+    {
+        nfsTable.removeAt( re[i]);
+    }
+}
+
+int ElemTable::binarySearch( int start, int end, QString node)
+{
+    if (start > end)
+        return -1;
+    int key = node.toInt();
+    //int mid = start + (end - start) / 2;
+    int mid = (start + end) / 2;
+    if (nfsTable[mid][0][0].toInt() > key)
+        return binarySearch( start, mid - 1, node);
+    else if (nfsTable[mid][0][0].toInt() < key)
+        return binarySearch( mid + 1, end, node);
+    else
+        return mid;
 }
 
 void ElemTable::createTable( int n)
@@ -97,35 +125,64 @@ void ElemTable::removeElem(int start, int num)
     }
 }
 
-void ElemTable::searchFracSet(QString node, posTable *pt)
+void ElemTable::searchFracSet(QString node, posTable *pt, QString method)
 {
     QTime a;
     a.start();
+
     int *p;
-
-    for (int i=1; i<4; i++)
+    if (method == "binary")
     {
-        for (int j=0; j<table[i]->count()-1; j++)
+        int i;
+        i = binarySearch( 0, nfsTable.count()-1, node);
+        if (i == -1)
         {
-            if ( node == table[i][0][j])
+            QMessageBox msg;
+            msg.setText("binary search error");
+            msg.exec();
+        }
+        else
+        {
+            frac = nfsTable[i][0][1];
+            set = nfsTable[i][0][2];
+            p = pt->searchPos( frac, set);
+            if (p[0] == -1)
             {
-                frac = table[4][0][j];
-                set = table[5][0][j];
+            }
+            else
+            {
+                removeElem( p[0], p[1]);
+            }
+        }
+    }
+    else
+    {
+        for (int i=1; i<4; i++)
+        {
+            for (int j=0; j<table[i]->count()-1; j++)
+            {
+                if ( node == table[i][0][j])
+                {
+                    frac = table[4][0][j];
+                    set = table[5][0][j];
 
-                p = pt->searchPos( frac, set);
-                if (p[0] == -1)
-                {
-                    QMessageBox msg;
-                    msg.setText("searchPos error");
-                    msg.exec();
+                    p = pt->searchPos( frac, set);
+                    if (p[0] == -1)
+                    {
+                        QMessageBox msg;
+                        msg.setText("searchPos error");
+                        msg.exec();
+                        j = table[i]->count()-1;
+                        i = 4;
+                    }
+                    else
+                    {
+                        removeElem( p[0], p[1]);
+                        j = p[0];
+                    }
+                    qDebug()<<"frac"<<frac<<"set"<<set;
+                    qDebug()<<"i"<<i<<"j"<<j;
                 }
-                else
-                {
-                    removeElem( p[0], p[1]);
-                    j = p[0];
-                }
-                qDebug()<<"frac"<<frac<<"set"<<set;
-                qDebug()<<"i"<<i<<"j"<<j;
             }
         }
     }

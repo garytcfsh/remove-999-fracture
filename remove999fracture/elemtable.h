@@ -16,10 +16,12 @@ public:
 
     void createTable( int);
     void countingSortNfsTable();
+    void removeRepeatNfsTable();
+    int binarySearch( int, int, QString);
     void append( QString);
     void appendNfs( QString, QString, QString);
     void removeElem( int, int);
-    void searchFracSet( QString, posTable*);
+    void searchFracSet( QString, posTable*, QString);
     void reNumberingElem();
     QList< QStringList*> getTable();
     QList< QStringList*> getRemovedTable();

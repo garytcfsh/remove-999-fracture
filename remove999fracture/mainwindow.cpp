@@ -7,6 +7,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    QTime t;
+    t.start();
+
     QFile fileIn, fileOut, fileOut2;
     QString fileType = "mff";
 
@@ -56,6 +59,10 @@ MainWindow::MainWindow(QWidget *parent)
         msg.setText("The new restart file is created");
         msg.exec();
     }
+    qDebug()<<t.elapsed();
+    QString time;
+    msg.setText(time.setNum(t.elapsed()));
+    msg.exec();
 }
 
 MainWindow::~MainWindow()
@@ -158,6 +165,7 @@ void MainWindow::createElemTable()
         et.append( oneLine);
     }
     et.countingSortNfsTable();
+    et.removeRepeatNfsTable();
     qDebug()<<"fracElem table is created";
 
 }
@@ -166,12 +174,7 @@ void MainWindow::compareTargetNode()
 {
     for (int i=0; i<targetNode.count(); i++)
     {
-        et.searchFracSet( targetNode[i], &pt);
-        double a(i);
-        double b(targetNode.count());
-        qDebug()<<i<<targetNode[i];
-        qDebug()<<"searchFracSet complete";
-        //qDebug()<<a/b*100<<"%";
+        et.searchFracSet( targetNode[i], &pt, "binary");
     }
     et.reNumberingElem();
     qDebug()<<"compare complete";
