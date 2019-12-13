@@ -21,7 +21,7 @@ public:
     void append( QString);
     void appendNfs( QString, QString, QString);
     void removeElem( int, int);
-    void searchFracSet( QString, posTable*, QString);
+    int searchFracSet( QString, posTable*, QString);
     void reNumberingElem();
     QList< QStringList*> getTable();
     QList< QStringList*> getRemovedTable();

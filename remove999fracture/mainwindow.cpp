@@ -59,7 +59,6 @@ MainWindow::MainWindow(QWidget *parent)
         msg.setText("The new restart file is created");
         msg.exec();
     }
-    qDebug()<<t.elapsed();
     QString time;
     msg.setText(time.setNum(t.elapsed()));
     msg.exec();
@@ -172,9 +171,22 @@ void MainWindow::createElemTable()
 
 void MainWindow::compareTargetNode()
 {
+    int err = 0;
     for (int i=0; i<targetNode.count(); i++)
     {
-        et.searchFracSet( targetNode[i], &pt, "binary");
+        err = et.searchFracSet( targetNode[i], &pt, "t");
+        if (err == -1)
+        {
+            msg.setText("compare target node error: binary search error");
+            msg.exec();
+            i = targetNode.count();
+        }
+        else if (err == -2)
+        {
+            msg.setText("compare target node error: linear search error");
+            msg.exec();
+            i = targetNode.count();
+        }
     }
     et.reNumberingElem();
     qDebug()<<"compare complete";

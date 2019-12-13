@@ -125,37 +125,40 @@ void ElemTable::removeElem(int start, int num)
     }
 }
 
-void ElemTable::searchFracSet(QString node, posTable *pt, QString method)
+int ElemTable::searchFracSet(QString node, posTable *pt, QString method)
 {
-    QTime a;
-    a.start();
-
     int *p;
-    if (method == "binary")
+
+    if (method == "t")
+    {
+        int i = node.toInt() - 1;
+        frac = nfsTable[i][0][1];
+        set = nfsTable[i][0][2];
+        p = pt->searchPos( frac, set);
+        if (p[0] != -1)
+            removeElem( p[0], p[1]);
+
+        return 0;
+    }
+    else if (method == "b")
     {
         int i;
         i = binarySearch( 0, nfsTable.count()-1, node);
         if (i == -1)
         {
-            QMessageBox msg;
-            msg.setText("binary search error");
-            msg.exec();
+            return -1;
         }
         else
         {
             frac = nfsTable[i][0][1];
             set = nfsTable[i][0][2];
             p = pt->searchPos( frac, set);
-            if (p[0] == -1)
-            {
-            }
-            else
-            {
+            if (p[0] != -1)
                 removeElem( p[0], p[1]);
-            }
         }
+        return 0;
     }
-    else
+    else if (method == "l")
     {
         for (int i=1; i<4; i++)
         {
@@ -169,24 +172,18 @@ void ElemTable::searchFracSet(QString node, posTable *pt, QString method)
                     p = pt->searchPos( frac, set);
                     if (p[0] == -1)
                     {
-                        QMessageBox msg;
-                        msg.setText("searchPos error");
-                        msg.exec();
-                        j = table[i]->count()-1;
-                        i = 4;
+                        return -2;
                     }
                     else
                     {
                         removeElem( p[0], p[1]);
                         j = p[0];
                     }
-                    qDebug()<<"frac"<<frac<<"set"<<set;
-                    qDebug()<<"i"<<i<<"j"<<j;
                 }
             }
         }
+        return 0;
     }
-    qDebug()<<a.elapsed()<<" ms";
 }
 
 void ElemTable::reNumberingElem()
