@@ -10,6 +10,7 @@
 #include <QTextStream>
 #include <QMessageBox>
 #include <QTime>
+#include <QPlainTextEdit>
 
 
 
@@ -34,6 +35,9 @@ public:
     void wrightFile();
     void createNewFile( QFile*, QString);
     void renameFile( QFile*, QFile*);
+
+private slots:
+    void on_selectFile_PB_clicked();
 
 private:
     Ui::MainWindow *ui;

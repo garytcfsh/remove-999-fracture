@@ -7,8 +7,18 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    QTime t;
-    t.start();
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+
+}
+
+void MainWindow::on_selectFile_PB_clicked()
+{
+//    ui->textBrowser_2->clear();
+ //   ui->textBrowser_2->append("opening file...");
 
     QFile fileIn, fileOut, fileOut2;
     QString fileType = "mff";
@@ -38,6 +48,8 @@ MainWindow::MainWindow(QWidget *parent)
                 gridElemLine = oneLine;
             }
         }
+//        ui->textBrowser_2->append("file is open.");
+
         createTargetNodeList();
         createPosTable();
         createElemTable();
@@ -56,18 +68,11 @@ MainWindow::MainWindow(QWidget *parent)
         fileOut.close();
         fileOut2.close();
 
-        msg.setText("The new restart file is created");
+   //     ui->textBrowser_2->append("wrighting completed");
+        msg.setText("New restart file created");
         msg.exec();
     }
-    QString time;
-    msg.setText(time.setNum(t.elapsed()));
-    msg.exec();
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
-
+    targetNode.clear();
 }
 
 int MainWindow::openFile(QFile *file, QString fileType)
@@ -95,6 +100,10 @@ void MainWindow::createFile(QFile *file, QString fileName)
 
 void MainWindow::createTargetNodeList()
 {
+  //  ui->textBrowser_2->append("creating target node list...");
+//ui->plainTextEdit->appendHtml("df456456s");
+
+
     QStringList QSL_oneLine;
     QString oneLine, lastNode, lastNode1, lastNode2;
     int TYPE, HEAD;
@@ -118,11 +127,14 @@ void MainWindow::createTargetNodeList()
         lastNode = QSL_oneLine[0];
     }
     maxNodeNum = lastNode2.toInt();
-    qDebug()<<"target list is created";
+    qDebug()<<"target node list creation completed";
+//    ui->textBrowser_2->append("target node list creation completed");
 }
 
 void MainWindow::createPosTable()
 {
+//    ui->textBrowser_2->append("creating position table...");
+
     QStringList QSL_oneLine;
     QString elemNum, oldFracNum, oldSetNum;
     int Frac, Set;
@@ -149,11 +161,14 @@ void MainWindow::createPosTable()
         oldSetNum = QSL_oneLine[Set];
         i++;
     }
-    qDebug()<<"position table is created";
+    qDebug()<<"position table creation completed";
+ //   ui->textBrowser_2->append("position table creation completed");
 }
 
 void MainWindow::createElemTable()
 {
+ //   ui->textBrowser_2->append("creating element table...");
+
     //there is a strange property which is named "Minerals" in restart.mff
     et.createTable( fracElemLine.simplified().split(" ").count()-1);
     QString oneLine;
@@ -165,12 +180,14 @@ void MainWindow::createElemTable()
     }
     et.countingSortNfsTable();
     et.removeRepeatNfsTable();
-    qDebug()<<"fracElem table is created";
-
+    qDebug()<<"element table creation completed";
+//    ui->textBrowser_2->append("element table creation completed");
 }
 
 void MainWindow::compareTargetNode()
 {
+//    ui->textBrowser_2->append("comparing target node...");
+
     int err = 0;
     for (int i=0; i<targetNode.count(); i++)
     {
@@ -189,7 +206,8 @@ void MainWindow::compareTargetNode()
         }
     }
     et.reNumberingElem();
-    qDebug()<<"compare complete";
+    qDebug()<<"compare completed";
+ //   ui->textBrowser_2->append("compare completed");
 }
 
 void MainWindow::createNewFile(QFile *newFile, QString fileName)
@@ -200,6 +218,8 @@ void MainWindow::createNewFile(QFile *newFile, QString fileName)
 
 void MainWindow::wrightFile()
 {
+ //   ui->textBrowser_2->append("wrighting file...");
+
     streamIn.seek(headPos);
     QString oneLine;
 
@@ -246,3 +266,4 @@ void MainWindow::renameFile(QFile *oldFile, QFile *newFile)
     oldFile->rename( fileName + "old");
     newFile->rename( fileName + "mff");
 }
+
